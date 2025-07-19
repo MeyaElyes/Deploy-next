@@ -1,3 +1,5 @@
+// pages/home/blog.tsx
+
 import { useEffect } from 'react';
 import Head from 'next/head';
 import Header from '../../components/header';
@@ -9,8 +11,7 @@ type MenuItem = {
 };
 
 export async function getStaticProps() {
-  // Fetch the page content including databaseId
-  const resPage = await fetch('http://kendrick-lamar-official-website.local/graphql', {
+  const res = await fetch('http://kendrick-lamar-official-website.local/graphql', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -20,25 +21,7 @@ export async function getStaticProps() {
             content
             databaseId
           }
-        }
-      `,
-    }),
-  });
-
-  const { data: pageData } = await resPage.json();
-
-  if (!pageData.page) {
-    return { notFound: true };
-  }
-
-  // Fetch the menu items PS need to fetch it CSS also idk where to find it but i will
-  const resMenu = await fetch('http://kendrick-lamar-official-website.local/graphql', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({
-      query: `
-        {
-          menuItems(where: {location: PRIMARY}) {
+          menuItems(where: { location: PRIMARY }) {
             nodes {
               label
               url
@@ -49,15 +32,17 @@ export async function getStaticProps() {
     }),
   });
 
-  const { data: menuData } = await resMenu.json();
+  const { data } = await res.json();
+
+  if (!data?.page) return { notFound: true };
 
   return {
     props: {
       page: {
-        content: pageData.page.content,
-        databaseId: pageData.page.databaseId,
+        content: data.page.content,
+        databaseId: data.page.databaseId,
       },
-      menuItems: menuData.menuItems.nodes,
+      menuItems: data.menuItems.nodes,
     },
   };
 }
@@ -70,30 +55,34 @@ export default function Blog({
   menuItems: MenuItem[];
 }) {
   useEffect(() => {
-    // idk what is this please explain it 
+    // ✅ Inject Elementor CSS dynamically based on post ID
     const elementorCSS = document.createElement('link');
     elementorCSS.rel = 'stylesheet';
     elementorCSS.href = `http://kendrick-lamar-official-website.local/wp-content/uploads/elementor/css/post-${page.databaseId}.css`;
+    elementorCSS.type = 'text/css';
+    elementorCSS.media = 'all';
     document.head.appendChild(elementorCSS);
-// also this 
+
+    // Cleanup on unmount
     return () => {
-      document.head.removeChild(elementorCSS);
+      if (document.head.contains(elementorCSS)) {
+        document.head.removeChild(elementorCSS);
+      }
     };
   }, [page.databaseId]);
 
   return (
-    //this is the page i return under html 
     <>
-    {/*head that contain title */}
       <Head>
         <title>Blog</title>
       </Head>
-      {/*header which is the page menu */}
-      <Header/>
-      {/*this need to be explained*/}
+
+      <Header />
+
       <div className={`home page page-id-${page.databaseId} ast-page-builder-template ast-no-sidebar`}>
         <main
           style={{
+            color:"white",
             maxWidth: 1900,
             margin: '40px auto',
             padding: '40px 24px',
@@ -109,9 +98,8 @@ export default function Blog({
           </div>
         </main>
       </div>
-      {/*footer */}
-            <Footer/>
 
+      <Footer />
     </>
   );
 }

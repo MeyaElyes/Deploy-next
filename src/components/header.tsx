@@ -92,9 +92,9 @@ export default function Header() {
   }
 
   return (
-    <header className="bg-white font-[Poppins]">
+    <header className="bg-black font-[Poppins]">
       <div className="max-w-[1230px] mx-auto px-4">
-        <div className="flex justify-between items-center h-[54px]">
+        <div className="flex justify-between items-center h-[82px] ">
           
           {/* Logo */}
           <div className="flex items-center mt-[6px]">
@@ -103,31 +103,33 @@ export default function Header() {
                 <img
                   src={logoUrl}
                   alt={siteInfo?.title || 'Site Logo'}
-                  className="h-[62px] w-auto transition-transform duration-200 hover:scale-105"
+                  className="h-[62px] w-auto transition-transform duration-200 "
                 />
               </a>
             ) : (
               <a
                 href={siteInfo?.url || '/'}
-                className="text-2xl font-bold text-black hover:text-gray-600 transition-colors duration-200"
+                className="text-2xl font-bold text-white hover:text-gray-300 transition-colors duration-200"
               >
-                {siteInfo?.title || 'Site Title'}
+                {siteInfo?.title }
               </a>
             )}
           </div>
 
           {/* Navigation */}
           {navigationItems.length > 0 && (
-            <nav className="flex gap-2 mt-[6px]">
+            <nav className="flex mt-[6px gap-6]" style={{ gap: '24px' }}>
               {navigationItems.map((item) => (
-                <a
+                 <a
                   key={item.id}
                   href={item.url}
                   target={item.target || '_self'}
-                  className="px-4 py-2 text-black font-medium text-lg rounded hover:text-gray-600 hover:bg-gray-100 transition-colors duration-200"
-                >
+                  className="px-4 py-2 font-medium text-lg rounded hover:text-gray-600 hover:bg-gray-100 no-underline"
+                  style={{ color: 'black', textDecoration: 'none' }}
+                  >
                   {item.label}
-                </a>
+                  </a>
+
               ))}
             </nav>
           )}

@@ -1,3 +1,16 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+.elementor a {
+  color: white !important;
+  text-decoration: none;
+}
+
+
+body {
+  font-family: 'Poppins', sans-serif;
+}
+

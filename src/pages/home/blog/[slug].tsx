@@ -1,6 +1,8 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useEffect } from 'react';
+import Header from '../../../components/header';
+import Footer from '../../../components/footer';
 
 export const getServerSideProps: GetServerSideProps<{
   post: { content: string; databaseId: number };
@@ -65,8 +67,10 @@ export default function PostPage({
         <title>blog</title>
       </Head>
 
+      <Header />
+
       <div className={`single-post postid-${post.databaseId} ast-page-builder-template ast-no-sidebar`}>
-        <main style={{ maxWidth: 1200, margin: 'auto', padding: 32 ,background:"black"}}>
+        <main style={{ maxWidth: 1500, margin: 'auto', padding: 32, background: 'black' ,color:"white"}}>
           <div className={`elementor elementor-${post.databaseId}`}>
             <div className="elementor-inner">
               <div className="elementor-section-wrap">
@@ -76,6 +80,8 @@ export default function PostPage({
           </div>
         </main>
       </div>
+
+      <Footer />
     </>
   );
 }

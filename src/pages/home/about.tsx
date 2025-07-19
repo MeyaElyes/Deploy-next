@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import Head from 'next/head';
+import Header from '../../components/header';
+import Footer from '../../components/footer';
 
 type MenuItem = {
   label: string;
@@ -34,12 +36,10 @@ export async function getStaticProps() {
   };
 }
 
-
 export default function About({
   page,
 }: {
   page: { content: string; databaseId: number };
-  menuItems: MenuItem[]; // kept to match your structure but unused now what do u mean unused what the fuck
 }) {
   useEffect(() => {
     const elementorCSS = document.createElement('link');
@@ -57,11 +57,21 @@ export default function About({
       <Head>
         <title>About</title>
       </Head>
-{/*add header and footer please i forgot */}
+
+      <Header />
+
       <div
         className={`home page page-id-${page.databaseId} ast-page-builder-template ast-no-sidebar`}
       >
-        <main style={{ maxWidth: 1200, margin: 'auto', padding: 32 }}>
+        <main
+          style={{
+            maxWidth: 1500,
+            margin: 'auto',
+            padding: 40,
+            background: 'black',
+            color: 'white',
+          }}
+        >
           <div className={`elementor elementor-${page.databaseId}`}>
             <div className="elementor-inner">
               <div className="elementor-section-wrap">
@@ -71,6 +81,8 @@ export default function About({
           </div>
         </main>
       </div>
+
+      <Footer />
     </>
   );
 }

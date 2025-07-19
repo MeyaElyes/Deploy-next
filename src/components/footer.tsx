@@ -17,10 +17,10 @@ export default function Footer() {
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
             query: `
-              {
-                astraFooterHtml
-                astraAllCssUrls
-              }
+                {
+                  astraFooterHtml
+                  astraAllCssUrls
+                }
             `,
           }),
         });
@@ -48,13 +48,14 @@ export default function Footer() {
     fetchFooterData();
   }, []);
 
+
   useEffect(() => {
     if (themeCssUrls.length === 0) return;
-
     const links = themeCssUrls.map((url) => {
       if (document.querySelector(`link[href="${url}"]`)) {
         return null;
       }
+
 
       const link = document.createElement('link');
       link.rel = 'stylesheet';
@@ -95,7 +96,7 @@ export default function Footer() {
   }
 
   return (
-    <div className="site ast-container">
+  <div className="site ast-container text-black">
       <footer
         className="site-footer"
         dangerouslySetInnerHTML={{ __html: footerHtml }}

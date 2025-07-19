@@ -14,6 +14,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     };
   }, [pageProps?.page?.databaseId]);
 
+  
   return <Component {...pageProps} />;
 }
 

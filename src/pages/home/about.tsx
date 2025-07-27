@@ -4,45 +4,54 @@ import Head from 'next/head';
 // import Footer from '../../components/footer';
 
 export async function getStaticProps() {
-  // Check if we're in development and the WordPress site is available
-  const isLocal = process.env.NODE_ENV === 'development';
-  const wordpressUrl = process.env.WORDPRESS_URL || 'http://kendrick-lamar-official-website.local';
-  
   let pageData;
 
-  if (isLocal) {
-    try {
-      const resPage = await fetch(`${wordpressUrl}/graphql`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          query: `
-            {
-              page(id: "about", idType: URI) {
-                content
-                databaseId
+  // NEVER fetch WordPress in production - only in development
+  if (process.env.NODE_ENV === 'development') {
+    // Only try WordPress if explicitly enabled
+    const wordpressUrl = process.env.WORDPRESS_URL;
+    
+    if (wordpressUrl) {
+      try {
+        console.log('Attempting to fetch from WordPress:', wordpressUrl);
+        const resPage = await fetch(`${wordpressUrl}/graphql`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            query: `
+              {
+                page(id: "about", idType: URI) {
+                  content
+                  databaseId
+                }
               }
-            }
-          `,
-        }),
-      });
+            `,
+          }),
+        });
 
-      const response = await resPage.json();
-      pageData = response.data.page;
-    } catch (error) {
-      console.warn('WordPress fetch failed, using fallback data:', error.message);
-      pageData = null;
+        const response = await resPage.json();
+        if (response.data?.page) {
+          pageData = response.data.page;
+          console.log('WordPress data loaded successfully');
+        }
+      } catch (error: any) {
+        console.warn('WordPress fetch failed, using fallback data:', error.message);
+      }
+    } else {
+      console.log('WORDPRESS_URL not set, using fallback data');
     }
+  } else {
+    console.log('Production environment detected, skipping WordPress fetch');
   }
 
-  // Fallback data for production or when WordPress is unavailable
+  // Always use fallback data if WordPress data not available
   if (!pageData) {
     pageData = {
       content: `
-        <div class="elementor-widget-container">
-          <h1>About</h1>
-          <p>Welcome to the about page. This content will be loaded from WordPress when available.</p>
-          <p>Currently showing fallback content for deployment.</p>
+        <div class="elementor-widget-container" style="padding: 40px; text-align: center;">
+          <h1 style="font-size: 2.5rem; margin-bottom: 20px; color: #fff;">About</h1>
+          <p style="font-size: 1.2rem; line-height: 1.6; margin-bottom: 20px;">Welcome to the about page. This content will be loaded from WordPress when available.</p>
+          <p style="font-size: 1rem; opacity: 0.8;">Currently showing fallback content for deployment.</p>
         </div>
       `,
       databaseId: 123
@@ -56,7 +65,7 @@ export async function getStaticProps() {
         databaseId: pageData.databaseId,
       },
     },
-    revalidate: 60, // Revalidate every minute in production
+    revalidate: 3600, // Revalidate every hour in production
   };
 }
 
@@ -66,20 +75,22 @@ export default function About({
   page: { content: string; databaseId: number };
 }) {
   useEffect(() => {
-    // Only load CSS in development or when WordPress URL is available
-    const wordpressUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL;
-    
-    if (wordpressUrl && process.env.NODE_ENV === 'development') {
-      const elementorCSS = document.createElement('link');
-      elementorCSS.rel = 'stylesheet';
-      elementorCSS.href = `${wordpressUrl}/wp-content/uploads/elementor/css/post-${page.databaseId}.css`;
-      document.head.appendChild(elementorCSS);
+    // Only load CSS in development when WordPress URL is available
+    if (process.env.NODE_ENV === 'development') {
+      const wordpressUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL;
+      
+      if (wordpressUrl) {
+        const elementorCSS = document.createElement('link');
+        elementorCSS.rel = 'stylesheet';
+        elementorCSS.href = `${wordpressUrl}/wp-content/uploads/elementor/css/post-${page.databaseId}.css`;
+        document.head.appendChild(elementorCSS);
 
-      return () => {
-        if (document.head.contains(elementorCSS)) {
-          document.head.removeChild(elementorCSS);
-        }
-      };
+        return () => {
+          if (document.head.contains(elementorCSS)) {
+            document.head.removeChild(elementorCSS);
+          }
+        };
+      }
     }
   }, [page.databaseId]);
 

@@ -6,44 +6,39 @@ import { useEffect } from 'react';
 export async function getStaticProps() {
   let pageData;
 
-  // NEVER fetch WordPress in production - only in development
-  if (process.env.NODE_ENV === 'development') {
-    // Only try WordPress if explicitly enabled
-    const wordpressUrl = process.env.WORDPRESS_URL;
-    
-    if (wordpressUrl) {
-      try {
-        console.log('Attempting to fetch home data from WordPress:', wordpressUrl);
-        const resPage = await fetch(`${wordpressUrl}/graphql`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            query: `
-              {
-                page(id: "home", idType: URI) {
-                  content
-                  databaseId
-                }
+  // Try to fetch WordPress content in all environments
+  const wordpressUrl = process.env.WORDPRESS_URL;
+  
+  if (wordpressUrl) {
+    try {
+      console.log('Attempting to fetch home data from WordPress:', wordpressUrl);
+      const resPage = await fetch(`${wordpressUrl}/graphql`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          query: `
+            {
+              page(id: "home", idType: URI) {
+                content
+                databaseId
               }
-            `,
-          }),
-        });
+            }
+          `,
+        }),
+      });
 
-        const { data } = await resPage.json();
-        
-        if (data?.page) {
-          pageData = data.page;
-          console.log('WordPress home data loaded successfully');
-        }
-      } catch (error: unknown) {
-        const errorMessage = error instanceof Error ? error.message : 'Unknown error';
-        console.warn('WordPress fetch failed, using fallback data:', errorMessage);
+      const { data } = await resPage.json();
+      
+      if (data?.page) {
+        pageData = data.page;
+        console.log('WordPress home data loaded successfully');
       }
-    } else {
-      console.log('WORDPRESS_URL not set, using fallback data');
+    } catch (error) {
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      console.warn('WordPress fetch failed, using fallback data:', errorMessage);
     }
   } else {
-    console.log('Production environment detected, skipping WordPress fetch');
+    console.log('WORDPRESS_URL not set, using fallback data');
   }
 
   // Fallback data if WordPress data not available
@@ -77,32 +72,30 @@ export default function Home({
   page: { content: string; databaseId: number };
 }) {
   useEffect(() => {
-    // Only load CSS in development when WordPress URL is available
-    if (process.env.NODE_ENV === 'development') {
-      const wordpressUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL;
+    // Load CSS when WordPress URL is available (in any environment)
+    const wordpressUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL;
+    
+    if (wordpressUrl) {
+      const elementorCSS = `${wordpressUrl}/wp-content/uploads/elementor/css/post-${page.databaseId}.css`;
       
-      if (wordpressUrl) {
-        const elementorCSS = `${wordpressUrl}/wp-content/uploads/elementor/css/post-${page.databaseId}.css`;
-        
-        const loadCSS = (url: string) => {
-          if (document.querySelector(`link[href="${url}"]`)) return;
-          const link = document.createElement('link');
-          link.rel = 'stylesheet';
-          link.href = url;
-          link.type = 'text/css';
-          link.media = 'all';
-          document.head.appendChild(link);
-          return link;
-        };
+      const loadCSS = (url: string) => {
+        if (document.querySelector(`link[href="${url}"]`)) return;
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = url;
+        link.type = 'text/css';
+        link.media = 'all';
+        document.head.appendChild(link);
+        return link;
+      };
 
-        const link = loadCSS(elementorCSS);
+      const link = loadCSS(elementorCSS);
 
-        return () => {
-          if (link && document.head.contains(link)) {
-            document.head.removeChild(link);
-          }
-        };
-      }
+      return () => {
+        if (link && document.head.contains(link)) {
+          document.head.removeChild(link);
+        }
+      };
     }
   }, [page.databaseId]);
 

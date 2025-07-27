@@ -10,33 +10,9 @@ body {
   font-family: 'Poppins', sans-serif;
 }
 
-.header {
-  width: 101vw;
-  position: relative;
-  top: -44px;           
-  left: 50%;
-  right: 50%;
-  margin-left: -49vw;
-  margin-right: -50vw;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-  box-sizing: border-box;
-  overflow-x: hidden;
-}
 
-.footer {
-  width: 101vw;
-  position: relative;
-  top: 44px;             /* move down 44px */
-  left: 50%;
-  right: 50%;
-  margin-left: -49vw;
-  margin-right: -50vw;
-  padding-left: 0 !important;
-  padding-right: 0 !important;
-  box-sizing: border-box;
-  overflow-x: hidden;
-}
+
+
 
 
 

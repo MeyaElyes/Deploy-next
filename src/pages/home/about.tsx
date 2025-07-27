@@ -34,9 +34,11 @@ export async function getStaticProps() {
           pageData = response.data.page;
           console.log('WordPress data loaded successfully');
         }
-      } catch (error: any) {
-        console.warn('WordPress fetch failed, using fallback data:', error.message);
-      }
+     } catch (error: unknown) {
+  const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+  console.warn('WordPress fetch failed, using fallback data:', errorMessage);
+}
+
     } else {
       console.log('WORDPRESS_URL not set, using fallback data');
     }

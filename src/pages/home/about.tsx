@@ -1,11 +1,10 @@
 import { useEffect } from 'react';
 import Head from 'next/head';
+// import Header from '../../components/header';
+// import Footer from '../../components/footer';
 
 export async function getStaticProps() {
-  // Use environment variable for the API URL
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://default-api-url.local/graphql';
-
-  const resPage = await fetch(apiUrl, {
+  const resPage = await fetch('http://kendrick-lamar-official-website.local/graphql', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -38,12 +37,9 @@ export default function About({
   page: { content: string; databaseId: number };
 }) {
   useEffect(() => {
-    // Use the same API URL from env for loading styles
     const elementorCSS = document.createElement('link');
-    const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://default-api-url.local';  // Fallback URL
-
     elementorCSS.rel = 'stylesheet';
-    elementorCSS.href = `${apiUrl.replace('/graphql', '')}/wp-content/uploads/elementor/css/post-${page.databaseId}.css`;
+    elementorCSS.href = `http://kendrick-lamar-official-website.local/wp-content/uploads/elementor/css/post-${page.databaseId}.css`;
     document.head.appendChild(elementorCSS);
 
     return () => {
@@ -57,8 +53,12 @@ export default function About({
         <title>About</title>
       </Head>
 
+      {/* <Header /> */}
+
       <main style={{ background: 'black', color: 'white', padding: '20px 0' }}>
-        <div className="max-w-[1500px] mt-10 box-border w-full">
+ {/*tailwind css for the component that holds the main page */ }
+    <div className="max-w-[1500px] mt-10 box-border w-full">
+
           <div
             className={`page-content elementor elementor-${page.databaseId}`}
             style={{ margin: 0, padding: 0 }}
@@ -66,6 +66,8 @@ export default function About({
           />
         </div>
       </main>
+
+      {/* <Footer /> */}
     </>
   );
 }

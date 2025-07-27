@@ -2,10 +2,7 @@ import { useEffect } from 'react';
 import Head from 'next/head';
 
 export async function getStaticProps() {
-  // Use the environment variable for the API URL
-const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'kendrick-lamar-official-website.local/graphql';
-
-  const res = await fetch(apiUrl, {
+  const res = await fetch('http://kendrick-lamar-official-website.local/graphql', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({

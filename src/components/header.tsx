@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+/*import React, { useEffect, useState } from 'react';
 
 interface MenuItem {
   id: string;
@@ -142,3 +142,4 @@ export default function Header() {
     </header>
   );
 }
+*/

@@ -1,21 +1,15 @@
-// pages/home/blog.tsx
-
 import { useEffect } from 'react';
 import Head from 'next/head';
-//import Header from '../../components/header';
-//import Footer from '../../components/footer';
-
-type MenuItem = {
-  label: string;
-  url: string;
-};
 
 export async function getStaticProps() {
-  const res = await fetch('http://kendrick-lamar-official-website.local/graphql', {
+  // Use the environment variable for the API URL
+const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'kendrick-lamar-official-website.local/graphql';
+
+  const res = await fetch(apiUrl, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
-      query: `
+      query: ` 
         {
           page(id: "/home/blog", idType: URI) {
             content
@@ -52,7 +46,7 @@ export default function Blog({
   menuItems,
 }: {
   page: { content: string; databaseId: number };
-  menuItems: MenuItem[];
+  menuItems: { label: string; url: string }[];  // Adjusted the type for clarity
 }) {
   useEffect(() => {
     const elementorCSS = document.createElement('link');
@@ -75,12 +69,10 @@ export default function Blog({
         <title>Blog</title>
       </Head>
 
-      {/*<Header />*/}
-
       <div className={`home page page-id-${page.databaseId} ast-page-builder-template ast-no-sidebar`}>
         <main
           style={{
-            color:"white",
+            color: "white",
             backgroundColor: 'black',
           }}
         >
@@ -93,8 +85,6 @@ export default function Blog({
           </div>
         </main>
       </div>
-
-     {/* <Footer /> */}
     </>
   );
 }

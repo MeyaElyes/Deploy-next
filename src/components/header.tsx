@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+/*import React, { useEffect, useState } from 'react';
 
 interface MenuItem {
   id: string;
@@ -96,7 +96,7 @@ export default function Header() {
       <div className="max-w-[1230px] mx-auto px-4">
         <div className="flex justify-between items-center h-[82px] ">
           
-          {/* Logo */}
+          
           <div className="flex items-center mt-[6px]">
             {logoUrl ? (
               <a href={siteInfo?.url || '/'}>
@@ -116,7 +116,7 @@ export default function Header() {
             )}
           </div>
 
-          {/* Navigation */}
+          
           {navigationItems.length > 0 && (
             <nav className="flex mt-[6px gap-6]" style={{ gap: '24px' }}>
               {navigationItems.map((item) => (
@@ -138,3 +138,5 @@ export default function Header() {
     </header>
   );
 }
+
+*/

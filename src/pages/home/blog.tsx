@@ -2,8 +2,8 @@
 
 import { useEffect } from 'react';
 import Head from 'next/head';
-import Header from '../../components/header';
-import Footer from '../../components/footer';
+//import Header from '../../components/header';
+//import Footer from '../../components/footer';
 
 type MenuItem = {
   label: string;
@@ -55,7 +55,6 @@ export default function Blog({
   menuItems: MenuItem[];
 }) {
   useEffect(() => {
-    // ✅ Inject Elementor CSS dynamically based on post ID
     const elementorCSS = document.createElement('link');
     elementorCSS.rel = 'stylesheet';
     elementorCSS.href = `http://kendrick-lamar-official-website.local/wp-content/uploads/elementor/css/post-${page.databaseId}.css`;
@@ -63,7 +62,6 @@ export default function Blog({
     elementorCSS.media = 'all';
     document.head.appendChild(elementorCSS);
 
-    // Cleanup on unmount
     return () => {
       if (document.head.contains(elementorCSS)) {
         document.head.removeChild(elementorCSS);
@@ -77,15 +75,12 @@ export default function Blog({
         <title>Blog</title>
       </Head>
 
-      <Header />
+      {/*<Header />*/}
 
       <div className={`home page page-id-${page.databaseId} ast-page-builder-template ast-no-sidebar`}>
         <main
           style={{
             color:"white",
-            maxWidth: 1900,
-            margin: '40px auto',
-            padding: '40px 24px',
             backgroundColor: 'black',
           }}
         >
@@ -99,7 +94,7 @@ export default function Blog({
         </main>
       </div>
 
-      <Footer />
+     {/* <Footer /> */}
     </>
   );
 }

@@ -1,8 +1,8 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useEffect } from 'react';
-import Header from '../../../components/header';
-import Footer from '../../../components/footer';
+//import Header from '../../../components/header';
+//import Footer from '../../../components/footer';
 
 export const getServerSideProps: GetServerSideProps<{
   post: { content: string; databaseId: number };
@@ -64,24 +64,32 @@ export default function PostPage({
   return (
     <>
       <Head>
-        <title>blog</title>
+        <title>blogs</title>
       </Head>
 
-      <Header />
+      {/*<Header />*/}
 
       <div className={`single-post postid-${post.databaseId} ast-page-builder-template ast-no-sidebar`}>
-        <main style={{ maxWidth: 1500, margin: 'auto', padding: 32, background: 'black' ,color:"white"}}>
-          <div className={`elementor elementor-${post.databaseId}`}>
-            <div className="elementor-inner">
-              <div className="elementor-section-wrap">
-                <div dangerouslySetInnerHTML={{ __html: post.content }} />
-              </div>
-            </div>
-          </div>
-        </main>
+        <main
+  style={{
+    background: 'black',
+    color: 'white',
+    maxWidth: '1800px',   
+    margin: '40px auto',  
+     }}
+>
+  <div className={`elementor elementor-${post.databaseId}`}>
+    <div className="elementor-inner">
+      <div className="elementor-section-wrap">
+        <div dangerouslySetInnerHTML={{ __html: post.content }} />
+      </div>  
+    </div>
+  </div>
+</main>
+
       </div>
 
-      <Footer />
+      {/*<Footer />*/}
     </>
   );
 }

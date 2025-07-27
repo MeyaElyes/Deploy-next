@@ -1,4 +1,4 @@
-/*import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function Footer() {
   const [footerHtml, setFooterHtml] = useState<string>('');
@@ -16,12 +16,10 @@ export default function Footer() {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
-            query: `
-                {
-                  astraFooterHtml
-                  astraAllCssUrls
-                }
-            `,
+            query: `{
+              astraFooterHtml
+              astraAllCssUrls
+            }`,
           }),
         });
 
@@ -32,14 +30,20 @@ export default function Footer() {
         const json = await res.json();
 
         if (json.errors) {
-          throw new Error(json.errors.map((e: any) => e.message).join(', '));
+          const errors = json.errors as { message: string }[]; // Correct type for errors
+          throw new Error(errors.map((e) => e.message).join(', '));
         }
 
         setFooterHtml(json.data?.astraFooterHtml || '');
         setThemeCssUrls(json.data?.astraAllCssUrls || []);
-      } catch (err: any) {
-        setError(err.message || 'Error fetching footer data');
-        console.error('Footer fetch error:', err);
+      } catch (err: unknown) {
+        if (err instanceof Error) {
+          setError(err.message || 'Error fetching footer data');
+          console.error('Footer fetch error:', err);
+        } else {
+          setError('An unknown error occurred');
+          console.error('Unknown error:', err);
+        }
       } finally {
         setLoading(false);
       }
@@ -48,14 +52,12 @@ export default function Footer() {
     fetchFooterData();
   }, []);
 
-
   useEffect(() => {
     if (themeCssUrls.length === 0) return;
     const links = themeCssUrls.map((url) => {
       if (document.querySelector(`link[href="${url}"]`)) {
         return null;
       }
-
 
       const link = document.createElement('link');
       link.rel = 'stylesheet';
@@ -74,7 +76,6 @@ export default function Footer() {
     };
   }, [themeCssUrls]);
 
-  
   if (loading) {
     return (
       <div className="site ast-container">
@@ -96,11 +97,11 @@ export default function Footer() {
   }
 
   return (
-  <div className="site ast-container text-black">
+    <div className="site ast-container text-black">
       <footer
         className="site-footer"
         dangerouslySetInnerHTML={{ __html: footerHtml }}
       />
     </div>
   );
-}*/
+}

@@ -1,6 +1,6 @@
 import Head from 'next/head';
-//import Header from '../../components/header';
-//import Footer from '../../components/footer';
+import Header from '../components/header';
+import Footer from '../components/footer';
 import { useEffect } from 'react';
 
 export async function getStaticProps() {
@@ -41,14 +41,12 @@ export async function getStaticProps() {
     console.log('WORDPRESS_URL not set, using fallback data');
   }
 
-  // Fallback data if WordPress data not available
   if (!pageData) {
     pageData = {
       content: `
-        <div class="elementor-widget-container" style="padding: 40px; text-align: center; background: black; color: white; min-height: 100vh;">
-          <h1 style="font-size: 3rem; margin-bottom: 20px; color: #fff;">Welcome Home</h1>
-          <p style="font-size: 1.2rem; line-height: 1.6; margin-bottom: 20px;">This is the home page. Content will be loaded from WordPress when available.</p>
-          <p style="font-size: 1rem; opacity: 0.8;">Currently showing fallback content for deployment.</p>
+        <div class="elementor-widget-container" style="padding: 40px; text-align: center; background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center;">
+          <h1 style="font-size: 3rem; margin-bottom: 20px; color: #fff; text-shadow: 2px 2px 4px rgba(0,0,0,0.3);">🎵 Kendrick Lamar Official</h1>
+          <p style="font-size: 1.2rem; line-height: 1.6; margin-bottom: 20px; max-width: 600px;">Welcome to the official website. Content will load from WordPress when available.</p>
         </div>
       `,
       databaseId: 125
@@ -62,7 +60,7 @@ export async function getStaticProps() {
         databaseId: pageData.databaseId,
       },
     },
-    revalidate: 3600, // Revalidate every hour in production
+    revalidate: 3600,
   };
 }
 
@@ -72,7 +70,6 @@ export default function Home({
   page: { content: string; databaseId: number };
 }) {
   useEffect(() => {
-    // Load CSS when WordPress URL is available (in any environment)
     const wordpressUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL;
     
     if (wordpressUrl) {
@@ -106,7 +103,7 @@ export default function Home({
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      {/*<Header />*/}
+      <Header />
 
       <main>
         <div
@@ -115,7 +112,7 @@ export default function Home({
         />
       </main>
 
-     {/*<Footer />*/}
+     <Footer />
     </>
   );
 }

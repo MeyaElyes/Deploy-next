@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import Head from 'next/head';
-// import Header from '../../components/header';
+ import Header from '../components/header';
 // import Footer from '../../components/footer';
 
 export async function getStaticProps() {
@@ -102,7 +102,7 @@ export default function About({
         <title>About</title>
       </Head>
 
-      {/* <Header /> */}
+      <Header /> 
 
       <main style={{ background: 'black', color: 'white', padding: '20px 0' }}>
         {/* tailwind css for the component that holds the main page */}

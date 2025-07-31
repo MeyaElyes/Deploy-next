@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
 import Head from 'next/head';
+import Header from '../components/header';
+//import Footer from '../components/footer';
 
 export async function getStaticProps() {
   let pageData;
@@ -81,9 +83,22 @@ export default function Blog({
         elementorCSS.media = 'all';
         document.head.appendChild(elementorCSS);
 
+        // Add custom CSS for header max-width
+        const customCSS = document.createElement('style');
+        customCSS.textContent = `
+          .header {
+            max-width: 1200px !important;
+            margin: 0 auto !important;
+          }
+        `;
+        document.head.appendChild(customCSS);
+
         return () => {
           if (document.head.contains(elementorCSS)) {
             document.head.removeChild(elementorCSS);
+          }
+          if (document.head.contains(customCSS)) {
+            document.head.removeChild(customCSS);
           }
         };
       }
@@ -94,10 +109,17 @@ export default function Blog({
     <>
       <Head>
         <title>Blog</title>
+        <style jsx>{`
+          .header {
+            max-width: 1200px !important;
+            margin: 0 auto !important;
+          }
+        `}</style>
       </Head>
 
+      <Header />
       <div className={`home page page-id-${page.databaseId}`}>
-        <main style={{ color: "white", backgroundColor: 'black' }}>
+        <main style={{ color: "white", backgroundColor: 'black', width: "100vw", minHeight: "100vh" }}>
           <div className={`elementor elementor-${page.databaseId}`}>
             <div className="elementor-inner">
               <div className="elementor-section-wrap">
@@ -107,6 +129,7 @@ export default function Blog({
           </div>
         </main>
       </div>
+     {/* <Footer />*/}
     </>
   );
 }

@@ -11,11 +11,13 @@ body {
 }
 
 
-
-
-
-
-
-a { 
+body a {
   color: white;
+}
+
+header nav{
+
+  gap: 30px;
+  font-family: 'Poppins', sans-serif;
+
 }

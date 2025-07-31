@@ -1,7 +1,7 @@
 import { GetServerSideProps } from 'next';
 import Head from 'next/head';
 import { useEffect } from 'react';
-//import Header from '../../../components/header';
+import Header from '../../components/header';
 //import Footer from '../../../components/footer';
 
 export const getServerSideProps: GetServerSideProps<{
@@ -67,7 +67,7 @@ export default function PostPage({
         <title>blogs</title>
       </Head>
 
-      {/*<Header />*/}
+      <Header />
 
       <div className={`single-post postid-${post.databaseId} ast-page-builder-template ast-no-sidebar`}>
         <main

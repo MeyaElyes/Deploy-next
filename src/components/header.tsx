@@ -1,4 +1,4 @@
-/*import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 interface MenuItem {
   id: string;
@@ -52,7 +52,7 @@ export default function Header() {
         const json = await res.json();
 
         if (json.errors) {
-          const errors = json.errors as { message: string }[]; // Correct type for errors
+          const errors = json.errors as { message: string }[];
           throw new Error(errors.map((e) => e.message).join(', '));
         }
 
@@ -86,7 +86,11 @@ export default function Header() {
     });
 
     return () => {
-      links.forEach((link) => document.head.removeChild(link));
+      links.forEach((link) => {
+        if (document.head.contains(link)) {
+          document.head.removeChild(link);
+        }
+      });
     };
   }, [themeCssUrls]);
 
@@ -123,7 +127,7 @@ export default function Header() {
           </div>
 
           {navigationItems.length > 0 && (
-            <nav className="flex mt-[6px gap-6]" style={{ gap: '24px' }}>
+            <nav className="flex mt-[6px] gap-6">
               {navigationItems.map((item) => (
                 <a
                   key={item.id}
@@ -142,4 +146,3 @@ export default function Header() {
     </header>
   );
 }
-*/

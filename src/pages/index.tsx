@@ -6,7 +6,6 @@ import { useEffect } from 'react';
 export async function getStaticProps() {
   let pageData;
 
-  // Try to fetch WordPress content in all environments
   const wordpressUrl = process.env.WORDPRESS_URL;
   
   if (wordpressUrl) {
@@ -63,6 +62,14 @@ export async function getStaticProps() {
     revalidate: 3600,
   };
 }
+// Client-side: Use NEXT_PUBLIC for public variables
+const wordpressUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL;
+console.log('Client-side URL:', wordpressUrl);
+
+// Server-side: Use WORDPRESS_URL for backend operations
+const serverSideWordPressUrl = process.env.WORDPRESS_URL;
+console.log('Server-side URL:', serverSideWordPressUrl);
+
 
 export default function Home({
   page,
@@ -112,7 +119,7 @@ export default function Home({
         />
       </main>
 
-     <Footer />
+   <Footer />
     </>
   );
 }

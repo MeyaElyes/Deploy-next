@@ -12,7 +12,16 @@ export default function Footer() {
         setLoading(true);
         setError(null);
 
-        const res = await fetch('http://kendrick-lamar-official-website.local/graphql', {
+        // Use the same environment variable pattern as your main page
+        const wordpressUrl = process.env.NEXT_PUBLIC_WORDPRESS_URL;
+        
+        if (!wordpressUrl) {
+          throw new Error('NEXT_PUBLIC_WORDPRESS_URL not configured');
+        }
+
+        console.log('Footer fetching from:', wordpressUrl);
+
+        const res = await fetch(`${wordpressUrl}/graphql`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -30,10 +39,11 @@ export default function Footer() {
         const json = await res.json();
 
         if (json.errors) {
-          const errors = json.errors as { message: string }[]; // Correct type for errors
+          const errors = json.errors as { message: string }[];
           throw new Error(errors.map((e) => e.message).join(', '));
         }
 
+        console.log('Footer data received:', json.data);
         setFooterHtml(json.data?.astraFooterHtml || '');
         setThemeCssUrls(json.data?.astraAllCssUrls || []);
       } catch (err: unknown) {
@@ -54,6 +64,9 @@ export default function Footer() {
 
   useEffect(() => {
     if (themeCssUrls.length === 0) return;
+    
+    console.log('Loading CSS URLs:', themeCssUrls);
+    
     const links = themeCssUrls.map((url) => {
       if (document.querySelector(`link[href="${url}"]`)) {
         return null;
@@ -76,6 +89,7 @@ export default function Footer() {
     };
   }, [themeCssUrls]);
 
+  // Always render something, even if there's an error
   if (loading) {
     return (
       <div className="site ast-container">
@@ -90,8 +104,22 @@ export default function Footer() {
     return (
       <div className="site ast-container">
         <div style={{ color: 'red', textAlign: 'center', padding: '20px' }}>
-          ⚠️ {error}
+          ⚠️ Footer Error: {error}
         </div>
+        {/* Fallback footer */}
+        <footer style={{ padding: '20px', textAlign: 'center', backgroundColor: '#f5f5f5' }}>
+          <p>&copy; 2024 Kendrick Lamar Official. All rights reserved.</p>
+        </footer>
+      </div>
+    );
+  }
+
+  if (!footerHtml) {
+    return (
+      <div className="site ast-container">
+        <footer style={{ padding: '20px', textAlign: 'center', backgroundColor: '#f5f5f5' }}>
+          <p>&copy; 2024 Kendrick Lamar Official. All rights reserved.</p>
+        </footer>
       </div>
     );
   }
